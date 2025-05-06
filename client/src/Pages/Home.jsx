@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Hero from '../components/Hero';
+import FilterBar from '../components/FilterBar';
+import BookList from '../components/BookList';
+import Footer from '../components/Footer';
 
 function Home() {
     const [books, setBooks] = useState([]);
@@ -6,40 +10,31 @@ function Home() {
 
     useEffect(() => {
         fetch('http://localhost:5000/api/books?sortBy=price&page=1&limit=10')
-
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 setBooks(data);
                 setError(false);
             })
-            .catch(error => {
-                console.error('Error fetching books:', error);
-                setError(false);
+            .catch(err => {
+                console.error('Error fetching books:', err);
+                setError(true);
             });
     }, []);
 
     return (
-        <div style={{ padding: '2rem' }}>
-            <h2>Bookshelf</h2>
-            {error && <p style={{ color: 'red' }}>Failed to load books.</p>}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                {books.map(book => (
-                    <div key={book.id} style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        padding: '1rem',
-                        width: '220px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                    }}>
-                        <h4>{book.title}</h4>
-                        <p><strong>Author:</strong> {book.author}</p>
-                        <p><strong>Price:</strong> £{book.price}</p>
-                        <button>View Details</button>
-                    </div>
-                ))}
+        <div>
+            <Hero />
+            <FilterBar />
+            <div style={{ padding: '2rem' }}>
+                <h2>Bookshelf</h2>
+                {error && <p style={{ color: 'red' }}>Failed to load books.</p>}
+                <BookList books={books} />
+
+               
             </div>
+            <Footer />
         </div>
     );
 }
 
-export default Home; 
+export default Home;

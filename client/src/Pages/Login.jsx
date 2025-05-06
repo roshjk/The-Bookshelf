@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -19,34 +19,68 @@ function Login() {
 
             const data = await res.json();
             localStorage.setItem('token', data.token);
-            navigate('/'); //back redirection to home
+            navigate('/');
         } catch (err) {
             alert(err.message);
         }
     };
 
     return (
-        <div style={{ padding: '2rem' }}>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
+        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+            <form onSubmit={handleSubmit} style={{
+                width: '400px',
+                padding: '2rem',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                backgroundColor: '#fff'
+            }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
                 <input
                     type="email"
                     placeholder="Email"
                     onChange={e => setEmail(e.target.value)}
                     required
-                /><br /><br />
+                    style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        marginBottom: '1rem',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px'
+                    }}
+                />
                 <input
                     type="password"
                     placeholder="Password"
                     onChange={e => setPassword(e.target.value)}
                     required
-                /><br /><br />
-                <button type="submit">Login</button>
+                    style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        marginBottom: '1rem',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px'
+                    }}
+                />
+                <button type="submit" style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    backgroundColor: 'black',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                }}>Login</button>
+
+                <p style={{ marginTop: '1rem', textAlign: 'center' }}>
+                    Don't have an account?{' '}
+                    <Link to="/register" style={{ color: 'blue', textDecoration: 'underline' }}>
+                        Register
+                    </Link>
+                </p>
             </form>
         </div>
     );
 }
 
 export default Login;
-
-
