@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 function Cart() {
     const [cart, setCart] = useState([]);
     const [error, setError] = useState(false);
-
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -15,6 +14,13 @@ function Cart() {
             .catch(err => {
                 console.error('Error loading cart:', err);
                 setError(true);
+
+                // Mock fallback data
+                setCart([
+                    { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", price: 14.99, quantity: 1 },
+                    { id: 2, title: "1984", author: "George Orwell", price: 25.98, quantity: 2 },
+                    { id: 3, title: "To Kill a Mockingbird", author: "Harper Lee", price: 16.99, quantity: 1 }
+                ]);
             });
     }, []);
 
@@ -26,65 +32,110 @@ function Cart() {
             });
 
             if (!res.ok) throw new Error('Failed to remove item');
-
             setCart(cart.filter(item => item.id !== itemId));
         } catch (err) {
             alert('Error removing item');
         }
     };
 
-    return (
-        <div style={{ padding: '2rem' }}>
-            <h2>Your Cart</h2>
-            {error && <p style={{ color: 'red' }}>Failed to load cart.</p>}
+    const handleQuantityChange = (itemId, newQty) => {
+        const updatedCart = cart.map(item =>
+            item.id === itemId ? { ...item, quantity: newQty } : item
+        );
+        setCart(updatedCart);
+    };
 
-            {cart.length === 0 ? (
-                <p>Your cart is empty.</p>
-            ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {cart.map(item => (
-                        <div key={item.id} style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            padding: '1rem',
-                            border: '1px solid #ccc',
-                            borderRadius: '8px'
-                        }}>
-                            <div>
-                                <h4>{item.title}</h4>
-                                <p>Author: {item.author}</p>
-                                <p>Price: £{item.price}</p>
-                                <p>Quantity: {item.quantity}</p>
-                            </div>
-                            <button
-                                onClick={() => handleRemove(item.id)}
-                                style={{
-                                    backgroundColor: 'red',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                    <button style={{
-                        marginTop: '2rem',
-                        padding: '1rem',
-                        backgroundColor: 'black',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        alignSelf: 'flex-end'
-                    }}>
-                        Place Order
-                    </button>
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shipping = cart.length > 0 ? 4.99 : 0;
+    const discount = cart.length > 0 ? 5.00 : 0;
+    const total = (subtotal + shipping - discount).toFixed(2);
+
+    return (
+        <div className="container py-5">
+            <h2 className="mb-4">Shopping Cart ({cart.length} items)</h2>
+
+            {error && (
+                <div className="alert alert-danger" role="alert">
+                    Failed to load cart. Showing sample data.
                 </div>
             )}
+
+            <div className="row">
+                {/* Left: Cart Items */}
+                <div className="col-lg-8">
+                    {cart.length === 0 ? (
+                        <p>Your cart is empty.</p>
+                    ) : (
+                        <div className="d-flex flex-column gap-3">
+                            {cart.map(item => (
+                                <div key={item.id} className="card shadow-sm p-3 d-flex flex-row justify-content-between align-items-center">
+                                    <div className="d-flex align-items-start gap-3">
+                                        <div
+                                            className="bg-light d-flex justify-content-center align-items-center"
+                                            style={{ width: '80px', height: '100px' }}
+                                        >
+                                            <span className="text-muted">Book Cover</span>
+                                        </div>
+                                        <div>
+                                            <h5 className="mb-1">{item.title}</h5>
+                                            <p className="text-muted mb-1">{item.author}</p>
+                                            <p className="mb-2">£{item.price}</p>
+                                            <div className="d-flex align-items-center gap-2">
+                                                <label className="form-label mb-0 me-2">Qty:</label>
+                                                <select
+                                                    className="form-select form-select-sm"
+                                                    style={{ width: '80px' }}
+                                                    value={item.quantity}
+                                                    onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                                >
+                                                    {[...Array(10)].map((_, i) => (
+                                                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                                    ))}
+                                                </select>
+                                                <button className="btn btn-link text-danger p-0" onClick={() => handleRemove(item.id)}>
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Right: Order Summary */}
+                <div className="col-lg-4 mt-4 mt-lg-0">
+                    <div className="card p-4 shadow-sm">
+                        <h5 className="mb-3">Order Summary</h5>
+                        <ul className="list-unstyled mb-3">
+                            <li className="d-flex justify-content-between">
+                                <span>Subtotal</span>
+                                <strong>£{subtotal.toFixed(2)}</strong>
+                            </li>
+                            <li className="d-flex justify-content-between">
+                                <span>Shipping</span>
+                                <strong>£{shipping.toFixed(2)}</strong>
+                            </li>
+                            <li className="d-flex justify-content-between">
+                                <span>Discount</span>
+                                <strong>-£{discount.toFixed(2)}</strong>
+                            </li>
+                            <li className="d-flex justify-content-between border-top pt-2 mt-2">
+                                <span>Total</span>
+                                <strong>£{total}</strong>
+                            </li>
+                        </ul>
+
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Promo code" />
+                            <button className="btn btn-outline-secondary" type="button">Apply</button>
+                        </div>
+
+                        <button className="btn btn-dark w-100">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

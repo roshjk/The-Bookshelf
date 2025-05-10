@@ -26,59 +26,40 @@ function Login() {
     };
 
     return (
-        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-            <form onSubmit={handleSubmit} style={{
-                width: '400px',
-                padding: '2rem',
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                backgroundColor: '#fff'
-            }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        marginBottom: '1rem',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px'
-                    }}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        marginBottom: '1rem',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px'
-                    }}
-                />
-                <button type="submit" style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    backgroundColor: 'black',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                }}>Login</button>
+        <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+            <div className="card shadow-sm p-4" style={{ maxWidth: '400px', width: '100%' }}>
+                <h2 className="text-center mb-4">Login</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Email"
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Password"
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-dark w-100">
+                        Login
+                    </button>
+                </form>
 
-                <p style={{ marginTop: '1rem', textAlign: 'center' }}>
+                <p className="text-center mt-3">
                     Don't have an account?{' '}
-                    <Link to="/register" style={{ color: 'blue', textDecoration: 'underline' }}>
+                    <Link to="/register" className="text-decoration-none text-primary">
                         Register
                     </Link>
                 </p>
-            </form>
+            </div>
         </div>
     );
 }

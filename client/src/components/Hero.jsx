@@ -2,36 +2,20 @@ import React from 'react';
 
 function Hero() {
     return (
-        <section style={{
-            background: '#f5f5f5',
-            padding: '4rem 2rem',
-            textAlign: 'center',
-            borderRadius: '8px',
-            margin: '2rem 0',
-        }}>
-
-            <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+        <section className="bg-light text-center p-5 rounded my-4">
+            <h1 className="display-6 fw-semibold mb-3">
                 Discover your Next Great Road
             </h1>
 
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
+            <p className="fs-5 mb-4">
                 Explore thousands of books from fiction to non-fiction, bestsellers to classics.
             </p>
 
-            <button style={{
-                padding: '0.75rem 1.5rem',
-                backgroundColor: '#000',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight:'bold'
-            }}>
+            <button className="btn btn-dark fw-bold px-4 py-2">
                 Browse Collection
-
             </button>
-
         </section>
     );
 }
+
 export default Hero;
